@@ -3,28 +3,37 @@ import { useState } from "react";
 import styles from "./index.module.css";
 
 export default function Home() {
-  const [animalInput, setAnimalInput] = useState("");
+  const [topic, setTopic] = useState("");
   const [result, setResult] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDrawing, setIsDrawing] = useState(false);
 
   async function onSubmit(event) {
     event.preventDefault();
     try {
+      setIsDrawing(true);
+      setIsLoading(true);
       const response = await fetch("/api/generate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ animal: animalInput }),
+        body: JSON.stringify({ topic }),
       });
 
       const data = await response.json();
       if (response.status !== 200) {
-        throw data.error || new Error(`Request failed with status ${response.status}`);
+        throw (
+          data.error ||
+          new Error(`Request failed with status ${response.status}`)
+        );
       }
 
       setResult(data.result);
-      setAnimalInput("");
-    } catch(error) {
+      setTopic("");
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
       // Consider implementing your own error handling logic here
       console.error(error);
       alert(error.message);
@@ -39,19 +48,49 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <img src="/dog.png" className={styles.icon} />
-        <h3>Name my pet</h3>
+        {/* <img src="/dog.png" className={styles.icon} /> */}
+        <h3
+          style={{
+            color: "white",
+          }}
+        >
+          Hi I'm your personal AI powered van gogh. What can i draw for you?
+        </h3>
         <form onSubmit={onSubmit}>
           <input
             type="text"
-            name="animal"
-            placeholder="Enter an animal"
-            value={animalInput}
-            onChange={(e) => setAnimalInput(e.target.value)}
+            name="topic"
+            placeholder="jimmy page playing gibson les paul"
+            value={topic}
+            onChange={(e) => setTopic(e.target.value)}
           />
-          <input type="submit" value="Generate names" />
+          <input type="submit" value="Paint it" />
         </form>
-        <div className={styles.result}>{result}</div>
+        {(isLoading || isDrawing) && (
+          <div
+            style={{
+              color: "white",
+              fontSize: 40,
+              fontWeight: 600,
+              marginTop: 80,
+            }}
+          >
+            Wait Bro. Drawing......
+          </div>
+        )}
+        <div className={styles.result}>
+          {result ? (
+            <img
+              src={result}
+              alt=""
+              onLoad={() => {
+                setIsDrawing(false);
+              }}
+            />
+          ) : (
+            <></>
+          )}
+        </div>
       </main>
     </div>
   );
