@@ -78,6 +78,7 @@ export default function Home() {
               fontSize: 40,
               fontWeight: 600,
               marginTop: 80,
+              textAlign: "center"
             }}
           >
             Wait Bro. Drawing......
