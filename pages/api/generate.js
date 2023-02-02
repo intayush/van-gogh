@@ -17,6 +17,7 @@ export default async function (req, res) {
   }
 
   const topic = req.body.topic || "";
+  const width = req.body.width;
   if (topic.trim().length === 0) {
     res.status(400).json({
       error: {
@@ -35,7 +36,7 @@ export default async function (req, res) {
     const response = await openai.createImage({
       prompt: generatePrompt(topic),
       n: 1,
-      size: "512x512",
+      size: `${width}x${width}`,
     });
     const image_url = response.data.data[0].url;
     res.status(200).json({ result: image_url });

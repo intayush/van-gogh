@@ -18,7 +18,10 @@ export default function Home() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ topic }),
+        body: JSON.stringify({
+          topic,
+          width: window.innerWidth > 550 ? 512 : 256,
+        }),
       });
 
       const data = await response.json();
@@ -52,6 +55,8 @@ export default function Home() {
         <h3
           style={{
             color: "white",
+            padding: 16,
+            textAlign: "center",
           }}
         >
           Hi I'm your personal AI powered van gogh. What can i draw for you?
