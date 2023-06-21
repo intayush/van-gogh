@@ -1,6 +1,8 @@
 import Head from "next/head";
 import { useState } from "react";
 import styles from "./index.module.css";
+import Script from "next/script";
+const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_MEASUREMENT_ID;
 
 export default function Home() {
   const [topic, setTopic] = useState("");
@@ -49,6 +51,18 @@ export default function Home() {
         <title>AI Van Gogh</title>
         <link rel="icon" href="/dog.png" />
       </Head>
+    <Script
+  src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+  strategy="afterInteractive"
+/>
+<Script id="google-analytics" strategy="afterInteractive">
+  {`
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){window.dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '${GA_MEASUREMENT_ID}');
+  `}
+</Script>
 
       <main className={styles.main}>
         {/* <img src="/dog.png" className={styles.icon} /> */}
